@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Task Timer</title>
+</head>
+<body ng-app="ToDoList">
+    <div ng-controller="MainController"> 
+        <!-- <div>  -->
+            <!-- <p id="container"> container </p> -->
+            <!-- <script src="js/table.js"> </script> -->
+        <!-- </div> -->
+        <table id="ToDoTable">
+            <thead style="display:table-header-group; text-align: left;">
+                <tr>
+                  <th id="name">Task</th>
+                  <th id="p1">1</th>
+                  <th id="p2">2</th>
+                  <th id="p3">3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="o in list">
+                  <td headers="name">{{o.name}}</td>
+                  <td headers="p1">{{o.progress[0]}}</td>
+                  <td headers="p2">{{o.progress[1]}}</td>
+                  <td headers="p3">{{o.progress[2]}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <input ng-model="addToDo">
+        <button ng-click="addItem()"> Add This To-Do </button> 
+        <div ng-repeat="item in list"> 
+            <li> {{ item.name }} </li>
+        </div>
+    <!-- Module -->
+    <script src="js/ToDoList.js"> </script>
+    <!-- Controller -->
+    <script src="js/controller/MainController.js"> </script>
+</body>
+</html>

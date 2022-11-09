@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <title>Task Timer</title>
+    <meta name="description" content="Demo page for task timer">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body ng-app="ToDoList">
+    <p> CSS </p>
+    <!-- <h1 style="text-align:center; color: white;" id="hidden">I was hidden</h1>
+    <div> 
+        <script src="js/index.js"> </script>
+        <button id="countDownButton" onclick="countDown()"> 10 </button>
+        <button id="alertMe"> Alert Me </button>
+    </div> -->
+    <div ng-controller="MainController"> 
+        <div ng-repeat="item in list"> 
+            <li> {{ item }} </li>
+        </div>
+        <input ng-model="addToDo">
+        <button ng-click="addItem()"> Add This To-Do </button> 
+    </div>
+    <!-- Module -->
+    <script src="js/ToDoList.js"> </script>
+    <!-- Controller -->
+    <script src="js/controller/MainController.js"> </script>
+</body>
+</html>
