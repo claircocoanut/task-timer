@@ -33,9 +33,7 @@ if (localStorageUsage > 5000) {
     // clear
     localStorage.clear();
 
-    // restore TaskType + last 10 day TODO
-    localStorage.setItem('taskType', data['taskType']);
-
+    // restore last 10 day TODO
     for (i = 0; i < storeKeys.length; i++) {
         if (storeKeys[i].startsWith("todo")) 
             var todoDate = storeKeys[i].substring(storeKeys[i].length - 10);

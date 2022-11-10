@@ -91,6 +91,7 @@ function addRowTable(newVal) {
     delButton.onclick = function(e) {
         if (confirm('Remove "' + newVal.name + '"?')) {
             $(this).closest('tr').remove();
+            saveTodoStatue();
         }
     };
     newRow.insertCell(0).append(delButton)
@@ -199,9 +200,11 @@ function saveTodoStatue() {
             thisTodo.comments = thisComment;
             allTodo.push(thisTodo);
         }
-        console.log(allTodo);
+        // console.log(allTodo);
         localStorage.setItem("todo-"+sessionStorage.getItem("tableDate"), JSON.stringify(allTodo));
     }
+    else 
+        localStorage.setItem("todo-"+sessionStorage.getItem("tableDate"),"[]");
 }
 
 setInterval(saveTodoStatue, 600000);

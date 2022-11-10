@@ -1,18 +1,8 @@
-// localStorage.clear();
+$.getJSON("../data/category.json", function(json) {
+    sessionStorage.setItem('taskType', JSON.stringify(json));
+});
 
-// $.getJSON("../data/category.json", function(json) {
-//     localStorage.setItem('taskType', JSON.stringify(json));
-// });
-
-// $.getJSON("../data/todo-08112022.json", function(json) {
-//     localStorage.setItem('todo-2022-11-08', JSON.stringify(json));
-// });
-
-// $.getJSON("../data/todo-10112022.json", function(json) {
-//     localStorage.setItem('todo-2022-11-10', JSON.stringify(json));
-// });
-
-const taskType = JSON.parse(localStorage.getItem('taskType'));
+const taskType = JSON.parse(sessionStorage.getItem('taskType'));
 
 var tableType = document.createElement("TABLE");  //makes a table element for the page
 tableType.setAttribute("id", "typeTable")

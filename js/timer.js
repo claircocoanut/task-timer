@@ -37,6 +37,9 @@ function setCurrentTimeMargin() {
 
     $("table tr td:nth-child(" + String(tSection + 2) + ")")
         .addClass('current-time-selection');
+
+    $(".statusHeader").removeClass('current-time-selection');
+
 }
 
 setCurrentTimeMargin();
