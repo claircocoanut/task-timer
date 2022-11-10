@@ -220,6 +220,7 @@ function switchDate(step) {
         localStorage.setItem("todo-" + toDateStr, "[]");
     }
     $("#todoTable tr").remove(); 
+    setDate();
     createTable();
 }
 
