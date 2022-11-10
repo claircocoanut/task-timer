@@ -20,7 +20,7 @@ function setDate() {
     else {
         dateSpan.textContent = sessionStorage.getItem("tableDate");
         dateSpanLabel.textContent = " (T" + 
-            Math.floor((Date.parse(dateSpan.textContent) - new Date()) / (1000*60*60*24)) + ")";
+            Math.ceil((Date.parse(dateSpan.textContent) - new Date()) / (1000*60*60*24)) + ")";
     }
 }
 
