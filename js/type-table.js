@@ -1,9 +1,3 @@
-$.getJSON("../data/category.json", function(json) {
-    sessionStorage.setItem('taskType', JSON.stringify(json));
-});
-
-const taskType = JSON.parse(sessionStorage.getItem('taskType'));
-
 var tableType = document.createElement("TABLE");  //makes a table element for the page
 tableType.setAttribute("id", "typeTable")
 tableType.setAttribute("class", "typeTable")
@@ -45,7 +39,13 @@ function createTypeTable() {
     document.getElementById('type-table-p').append(tableType);
 }
 
-createTypeTable();
+var taskType = null;
+
+$.getJSON("../data/category.json", function(json) {
+    sessionStorage.setItem('taskType', JSON.stringify(json));
+    taskType = json;
+    createTypeTable();
+});
 
 // function addCategory() {
 //     var newItem = document.getElementById('newCategoryInput').value;

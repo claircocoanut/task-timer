@@ -1,5 +1,6 @@
-var tableSchedule = document.createElement("TABLE");  //makes a table element for the page
-tableSchedule.setAttribute("id", "todoTable")
+sessionStorage.clear();
+
+var tableSchedule = document.getElementById("todoTable")
 
 $(document).ready(function () {
 
@@ -106,6 +107,7 @@ function addRowTable(newVal) {
         var cells = newRow.insertCell(col + 2);
         cells.innerHTML = newVal.progress[col];
 
+        // add cell comments
         if (col in newVal.comments) {
             cells.setAttribute("title", newVal.comments[col]);
             cells.style.border = "2px solid";
@@ -119,9 +121,10 @@ function addRowTable(newVal) {
 }
 
 
-function createTable() {
-    
-    var todo = JSON.parse(localStorage.getItem("todo-" + sessionStorage.getItem("tableDate")));
+function createTable(todo) {
+
+    $("#todoTable tr").remove(); 
+    var todo = JSON.parse(sessionStorage.getItem("todo-" + dateSpan.textContent));
 
     for(var i = 0; i < todo.length; i++) {
         addRowTable(todo[i]);
@@ -148,14 +151,13 @@ function createTable() {
             cells.className = "statusHeader";
         }
     }
-
-    document.getElementById('schedule-table-p').append(tableSchedule);
+    setCurrentTimeMargin();
 }
 
 function addTodo() {
     var newTodoItem = document.getElementById('newTodoInput').value;
     var newTodoCat = document.getElementById('newCategoryInput').value;
-    var todo = JSON.parse(localStorage.getItem("todo-" + sessionStorage.getItem("tableDate")));
+    var todo = JSON.parse(sessionStorage.getItem("todo-" + dateSpan.textContent));
 
     if (newTodoItem.length > 0) 
         if (newTodoCat.length > 0)
@@ -168,14 +170,14 @@ function addTodo() {
                     };
                     todo.push(newTodoObj);  
                     addRowTable(newTodoObj);
-                    localStorage.setItem("todo-" + sessionStorage.getItem("tableDate"), JSON.stringify(todo));
+                    saveTodoFile(todo);
                 }
             else {alert("Can't find [" + newTodoCat + "] from category.json!");}
         else {alert("Must input Category!");}
     else {alert("Must input new todo item!");}
 }
 
-// save status to localStorage
+// save status to sesssionStorage & JSON
 function saveTodoStatue() {
 
     var allTodo = []
@@ -201,28 +203,59 @@ function saveTodoStatue() {
             allTodo.push(thisTodo);
         }
         // console.log(allTodo);
-        localStorage.setItem("todo-"+sessionStorage.getItem("tableDate"), JSON.stringify(allTodo));
+        saveTodoFile(allTodo);
     }
     else 
-        localStorage.setItem("todo-"+sessionStorage.getItem("tableDate"),"[]");
+        saveTodoFile();
 }
 
 setInterval(saveTodoStatue, 600000);
 
+function loadLocalTodo() {
+
+    // if (!(("todo-" + dateSpan.textContent) in sessionStorage)) {
+    $.getJSON("../data/todo-"  + dateSpan.textContent + ".json")
+    .done(function(json) {
+        sessionStorage.setItem("todo-" + dateSpan.textContent, JSON.stringify(json));
+        createTable();
+    })
+    .fail(function() {
+        saveTodoFile();
+        createTable();
+    });
+    // }
+}
+
 
 // Switch to last/next date for review
 function switchDate(step) {
-    var toDate = Date.parse(sessionStorage.getItem("tableDate")) + step*1000*60*60*24;
-    var toDateStr = new Date(toDate).toISOString().substring(0, 10);
-    sessionStorage.setItem("tableDate", toDateStr);
-
-    if (!(("todo-" + toDateStr) in localStorage)) {
-        localStorage.setItem("todo-" + toDateStr, "[]");
-    }
-    $("#todoTable tr").remove(); 
-    setDate();
-    createTable();
+    var toDate = Date.parse(dateSpan.textContent) + step*1000*60*60*24;
+    dateSpan.textContent = new Date(toDate).toISOString().substring(0, 10);
+    setDateLabel();
+    loadLocalTodo();
 }
 
-// create inital table
-switchDate(0);     
+switchDate(0);
+  
+
+// save todo to local JSON
+function saveTodoFile(data){
+
+    var fileName = "todo-" + dateSpan.textContent
+    if (data)
+        jsonString = JSON.stringify(data);
+    else
+        jsonString = "[]"
+
+    console.log("save todo file: " + dateSpan.textContent);
+    sessionStorage.setItem(fileName, jsonString);
+
+    $.ajax({
+      url: '../saveFile.php',
+      data : {'fileName': fileName,
+              'jsonString': jsonString},
+      type: 'POST'
+    });
+}
+
+// setInterval(saveTodoFile, 1000);
