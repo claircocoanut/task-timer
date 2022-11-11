@@ -2,26 +2,30 @@ var dateSpan = document.getElementById('current-date');
 var dateSpanLabel = document.getElementById('current-date-label');
 var timeSpan = document.getElementById('current-time');
 
-setTime();
-setDate();
 
 function setTime() {
     var d = new Date();
     timeSpan.textContent = d.toLocaleTimeString();
 }
 
-function setDate() {
+function getLocalDateToday() {
     var d = new Date();
-    dateSpan.textContent = d.toISOString().substring(0, 10);
+    var dStr = d.toLocaleDateString();
+    return dStr.substring(6) + "-" + dStr.substring(3, 5) + "-" + dStr.substring(0, 2);
+
 }
+
+setTime();
+dateSpan.textContent = getLocalDateToday()
+
 
 function setDateLabel() {
     dateSpanLabel.textContent =  "(T" + 
-        Math.ceil((Date.parse(dateSpan.textContent) - new Date()) / (1000*60*60*24)) + ")";
+        (Math.floor((Date.parse(dateSpan.textContent) - Date.parse(getLocalDateToday())) / (1000*60*60*24))) + ")";
 }
 
 setInterval(setTime, 1000);
-setInterval(setDateLabel, 1000);
+// setInterval(setDateLabel, 1000);
 
 function setCurrentTimeMargin() {
     var t = new Date("2000-01-01T" + timeSpan.textContent) - 
