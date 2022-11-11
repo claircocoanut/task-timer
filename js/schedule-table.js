@@ -63,6 +63,7 @@ $(document).ready(function () {
 
         if (key == 13) {
             if ($selection !== null) {
+                // console.log("Change Highlight!")
                 $selection.removeClass("highlight-selection");
                 var i = $selection[0].innerHTML;
                 $selection.each(function() {
@@ -70,13 +71,15 @@ $(document).ready(function () {
                 })
                 $selection.css("opacity", 1 - i);
                 saveTodoStatue();
+                $selection = null;
             }
          }
     }); 
     
     // press key and add ToDo
-    $('#newTodoInput, #newCategoryInput, #addTodoButton').keyup(function (e) {
+    $('#newTodoInput, #newCategoryInput').keyup(function (e) {
         if (e.key === 'Enter' || e.keyCode === 13) {
+            // console.log("ADD TODO!")
             addTodo();
         }
     }); 
@@ -159,6 +162,9 @@ function addTodo() {
     var newTodoCat = document.getElementById('newCategoryInput').value;
     var todo = JSON.parse(sessionStorage.getItem("todo-" + dateSpan.textContent));
 
+    // console.log("addTodo - before add");
+    // console.log(todo);
+
     if (newTodoItem.length > 0) 
         if (newTodoCat.length > 0)
             if (newTodoCat in taskType) {
@@ -170,6 +176,9 @@ function addTodo() {
                     };
                     todo.push(newTodoObj);  
                     addRowTable(newTodoObj);
+
+                    // console.log("saveTodo - after add");
+                    // console.log(todo);
                     saveTodoFile(todo);
                 }
             else {alert("Can't find [" + newTodoCat + "] from category.json!");}
@@ -194,7 +203,7 @@ function saveTodoStatue() {
                 thisProgress.push(tableSchedule.rows[r].cells[c+2].innerHTML);
                 var thisTitle = tableSchedule.rows[r].cells[c+2].getAttribute("title");
                 if (thisTitle) {
-                    console.log(thisTitle);
+                    // console.log(thisTitle);
                     thisComment[c] = thisTitle;
                 }
             }
@@ -202,14 +211,16 @@ function saveTodoStatue() {
             thisTodo.comments = thisComment;
             allTodo.push(thisTodo);
         }
+        // console.log("saveTodoStatue");
         // console.log(allTodo);
         saveTodoFile(allTodo);
     }
-    else 
+    else {
         saveTodoFile();
+    }
 }
 
-setInterval(saveTodoStatue, 600000);
+// setInterval(saveTodoStatue, 600000);
 
 function loadLocalTodo() {
 
@@ -242,12 +253,17 @@ switchDate(0);
 function saveTodoFile(data){
 
     var fileName = "todo-" + dateSpan.textContent
-    if (data)
-        jsonString = JSON.stringify(data);
-    else
-        jsonString = "[]"
 
-    console.log("save todo file: " + dateSpan.textContent);
+    // console.log("saveTodoFile");
+    // console.log(data);
+
+    if (data != null)
+        jsonString = JSON.stringify(data);
+    else {
+        jsonString = "[]"
+        alert("Overwrite with []");
+    }
+
     sessionStorage.setItem(fileName, jsonString);
 
     $.ajax({
