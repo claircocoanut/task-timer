@@ -10,6 +10,7 @@ function setTime() {
 }
 
 
+// update value in "countdown-table"
 var planTime = document.getElementById("plan-time");
 var planTimeSpend = document.getElementById("plan-time-spend");
 var planTimeLeft = document.getElementById("plan-time-left");
@@ -39,7 +40,6 @@ function setPlanTime() {
 
     freeTime.textContent = (24 - startHour - parseFloat(planTime.textContent))
 
-    // console.log(new Date(2000, 0, 1, 0, 0, 0));
     var t = new Date(2000, 0, 1, 24, 0, 0) - new Date("2000-01-01T" + timeSpan.textContent);
     freeTimeLeft.textContent = Math.floor((t / 1000 / 60 / 60 - sumTimePlan + sumPlanTimeSpend) * 100) / 100;
     if (freeTimeLeft.textContent < 0)
