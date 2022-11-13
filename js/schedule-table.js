@@ -39,6 +39,7 @@ $(document).ready(function () {
     // highlight-selection if click
     $("#todoTable").on("click", ".statusCell", function() {
         $(this).toggleClass('highlight-selection');
+        calcTimeSpend(this);
     });
 
     // add comments if double click
@@ -50,6 +51,15 @@ $(document).ready(function () {
                 $(this).addClass("with-comment");
             else
                 $(this).removeClass("with-comment");
+            saveTodoStatue();
+        }
+    });
+
+    // add comments if double click
+    $("#todoTable").on("dblclick", ".timePlan", function() {
+        var timePlanHour=prompt('Hours planned on task?');
+        if (!isNaN(parseFloat(timePlanHour))) {
+            $(this)[0].innerHTML = parseFloat(timePlanHour);
             saveTodoStatue();
         }
     });
@@ -71,6 +81,7 @@ $(document).ready(function () {
                 })
                 $selection.css("opacity", 1 - i);
                 saveTodoStatue();
+                calcTimeSpend($selection[0]);
                 $selection = null;
             }
          }
@@ -88,9 +99,9 @@ $(document).ready(function () {
 
 function addRowTable(newVal) {
     var newRow = tableSchedule.insertRow(tableSchedule.rows.length);
-    var delButton = document.createElement("button")
+    var delButton = document.createElement("button");
 
-    // button to delete row
+    // C0: button to delete row
     delButton.innerText = "✕";
     delButton.onclick = function(e) {
         if (confirm('Remove "' + newVal.name + '"?')) {
@@ -98,16 +109,30 @@ function addRowTable(newVal) {
             saveTodoStatue();
         }
     };
-    newRow.insertCell(0).append(delButton)
+    newRow.insertCell(0).append(delButton);
 
-    var taskCell = newRow.insertCell(1)
+    // C1: Task row
+    var taskCell = newRow.insertCell(1);
     taskCell.innerHTML = newVal.name;
     taskCell.setAttribute("title", newVal.category);
     taskCell.style.backgroundColor = taskType[newVal.category].replace(')', ', 0.1)');
     taskCell.className = "taskCell";
 
+    // C2,3: Schedule Hour
+    var timePlan = newRow.insertCell(2);
+    timePlan.className = "timePlan";
+    timePlan.style.textAlign = "center";
+    if ("timePlan" in newVal) 
+        timePlan.innerHTML = newVal.timePlan;
+    else 
+        timePlan.innerHTML = 0;
+    var timeSpend = newRow.insertCell(3);
+    timeSpend.className = "timeSpend";
+    timeSpend.style.textAlign = "center";
+
+    // C4+: Progress bar
     for (var col = 0; col < nSection; col++) {
-        var cells = newRow.insertCell(col + 2);
+        var cells = newRow.insertCell(col + 4);
         cells.innerHTML = newVal.progress[col];
 
         // add cell comments
@@ -121,6 +146,16 @@ function addRowTable(newVal) {
         cells.style.backgroundColor = taskType[newVal.category];
         cells.className = "statusCell";
     }
+    calcTimeSpend(newRow);
+}
+
+function calcTimeSpend(e) {
+    var rowSelect = e.closest("tr");
+    var countTime = 0;
+    for (var i = 0; i < nSection; i++) {
+        countTime += parseInt(rowSelect.cells[i+4].innerHTML);
+    }
+    rowSelect.cells[3].innerHTML = countTime / nSectionPerHour;
 }
 
 
@@ -138,15 +173,28 @@ function createTable(todo) {
     
     headerRow.insertCell(0).style.width = '25px';
 
+    // C1: Task Header
     var taskHeader = headerRow.insertCell(1);
     taskHeader.innerHTML = "Task";
-    taskHeader.style.width = '200px';
+    taskHeader.style.width = '300px';
     taskHeader.style.fontWeight = '900';
     taskHeader.className = "taskCell";
 
+    // C2,3: Time Countdown Header
+    var timePlan = headerRow.insertCell(2);
+    timePlan.innerHTML = "Plan";
+    timePlan.style.textAlign = "center";
+    timePlan.style.width = '50px';
+
+    var timeSpend = headerRow.insertCell(3);
+    timeSpend.innerHTML = "Actual";
+    timeSpend.style.textAlign = "center";
+    timeSpend.style.width = '50px';
+
+    // C4+: Progress Header 
     for (var col = 0; col < nSection; col++) {
         if (col % nSectionPerHour == 0) {
-            var cells = headerRow.insertCell(col / nSectionPerHour + 2);
+            var cells = headerRow.insertCell(col / nSectionPerHour + 4);
             cells.style.width = '45px';
             cells.style.fontWeight = '900';
             cells.innerHTML = String(col / nSectionPerHour + startHour);
@@ -196,12 +244,13 @@ function saveTodoStatue() {
             var thisTodo = {}
             thisTodo.name = tableSchedule.rows[r].cells[1].innerHTML;
             thisTodo.category = tableSchedule.rows[r].cells[1].getAttribute("title");
-    
+            thisTodo.timePlan = tableSchedule.rows[r].cells[2].innerHTML;
+
             var thisProgress = [];
             var thisComment = {};
             for (var c = 0; c < nSection; c++) {
-                thisProgress.push(tableSchedule.rows[r].cells[c+2].innerHTML);
-                var thisTitle = tableSchedule.rows[r].cells[c+2].getAttribute("title");
+                thisProgress.push(tableSchedule.rows[r].cells[c+4].innerHTML);
+                var thisTitle = tableSchedule.rows[r].cells[c+4].getAttribute("title");
                 if (thisTitle) {
                     // console.log(thisTitle);
                     thisComment[c] = thisTitle;

@@ -20,7 +20,7 @@
         <button id="toNextDate" onclick="switchDate(1)"> Next Date </button> 
     </div>
     <br>
-    <div>   
+    <div> 
         <table class="timer-table">
             <tr>
                 <td><b>Date: </b></td>
@@ -31,6 +31,28 @@
                 <td><b>Time: </b></td>
                 <td><span id="current-time"></span></td>
                 <td></td>
+            </tr>
+        </table>
+        <br>
+        <br>
+        <table class="countdown-table">
+            <tr>
+                <th>(in hours) </td>
+                <th>Total</th>
+                <th>Spend</th>
+                <th>Remain</th>
+            </tr>
+            <tr>
+                <td><b>Planned time: </b></td>
+                <td><div id="plan-time"></div></td>
+                <td><div id="plan-time-spend"></div></td>
+                <td><div id="plan-time-left"></div></td>
+            </tr>
+            <tr>
+                <td><b>Free time: </b></td>
+                <td><div id="free-time"></div></td>
+                <td><div id="free-time-spend"></div></td>
+                <td><div id="free-time-left"></div></td>
             </tr>
         </table>
     </div>
