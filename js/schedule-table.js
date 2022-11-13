@@ -156,6 +156,13 @@ function calcTimeSpend(e) {
         countTime += parseInt(rowSelect.cells[i+4].innerHTML);
     }
     rowSelect.cells[3].innerHTML = countTime / nSectionPerHour;
+
+    // If timePlan > timeSpend = red 
+    var nTiemPlan = parseFloat(rowSelect.cells[2].innerHTML)
+    if (nTiemPlan > countTime / nSectionPerHour)
+        rowSelect.cells[3].style.color = "red"
+    else if ((0 < nTiemPlan) & (nTiemPlan < (countTime / nSectionPerHour - 1)))
+        rowSelect.cells[3].style.color = "blue"  
 }
 
 
